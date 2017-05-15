@@ -26,6 +26,9 @@
     <!---facebook strings-->
     <string name="try_Again">Try Again</string>
     <string name="homePage">Goto HomePage</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+
     <string name="facebook_app_id">294734874313931</string>
 
     <!---google strings-->

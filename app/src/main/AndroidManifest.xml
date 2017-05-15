@@ -63,9 +63,6 @@
         <activity android:name=".cartmodule.BillingPage"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".loginmodule.SigninActivity"
-            android:screenOrientation="portrait"/>
-
         <activity android:name=".readermodule.ReaderActivity"
             android:screenOrientation="portrait">
             <intent-filter>

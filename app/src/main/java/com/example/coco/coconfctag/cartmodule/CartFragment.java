@@ -148,17 +148,9 @@ public class CartFragment extends Fragment implements View.OnClickListener, Quan
                 } else {
 
                     Log.i("CartFragment","User Not logged IN");
-                   try {
-                      Intent i = new Intent(CartFragment.this.getActivity(),com.example.coco.coconfctag.loginmodule.SigninActivity.class);
-                       CartFragment.this.getActivity().startActivity(i);
-                    }
-                    catch(Exception e)
-                    {
-                        Log.d("Catch block","exception caught");
-                        e.printStackTrace();
-                    }
+
                    //openFrag(1, "");
-                   //openFrag(3,"");
+                   openFrag(3,"");
 
                 }
                 break;

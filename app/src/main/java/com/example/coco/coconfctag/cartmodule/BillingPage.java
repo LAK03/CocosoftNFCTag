@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.coco.coconfctag.R;
 import com.google.gson.Gson;
@@ -48,12 +49,20 @@ public class BillingPage extends AppCompatActivity  {
     Button _pay;
     Toolbar _pageTitle;
     TextView _amountDisplay;
+    TextView _txtView;
+    TextView _txtQt;
+    TextView _txtViewamount;
 
-
-    String status=null;
+    String status="";
     String JsonResponse = null;
     String returnCode =null;
     int checkoutAmount=0;
+
+    String CardNumber;
+    String ExpiratonDate;
+    String CVV;
+
+
     Random ran = new Random();
     ArrayList<CartItem> itemDetails;
 
@@ -78,6 +87,12 @@ public class BillingPage extends AppCompatActivity  {
 
         _amountDisplay = (TextView)findViewById(R.id.tranAmount);
 
+        _txtView = (TextView)findViewById(R.id.txtView);
+        _txtQt = (TextView)findViewById(R.id.txtViewQt);
+        _txtViewamount =(TextView)findViewById(R.id.txtViewAmount);
+
+
+
         _pageTitle = (Toolbar)findViewById(R.id.transactionPage_toolBar);
         setSupportActionBar(_pageTitle);
         getSupportActionBar().setTitle("Payment Page");
@@ -89,60 +104,102 @@ public class BillingPage extends AppCompatActivity  {
 
         Log.i("Item Name",itemDetails.get(0).getProductName());
 
-        _amountDisplay.setText("Amount to be Paid : $"+String.valueOf(checkoutAmount));
+        String textView = "Item Name\n";
+        textView = textView +"-----------------------------\n";
+        String textViewQuantity= "Quantity\n";
+        textViewQuantity = textViewQuantity + "-----------------\n";
+        String textViewAmount = "Price\n";
+        textViewAmount = textViewAmount +"---------------\n";
+
+
+
+         for(int j = 0;j<itemDetails.size();j++)
+         {
+             textView = textView + itemDetails.get(j).getProductName() + "\n";
+             textViewQuantity = textViewQuantity + itemDetails.get(j).getCount() +"\n";
+             textViewAmount = textViewAmount +"$"+itemDetails.get(j).getProductPrice() +"\n";
+
+         }
+
+
+
+        _txtView.setText(textView);
+        _txtQt.setText(textViewQuantity);
+        _txtViewamount.setText(textViewAmount);
+
+
+
+
+        _amountDisplay.setText("subtotal :                                  $"+String.valueOf(checkoutAmount));
 
         _pay =(Button)findViewById(R.id.pay);
+
+
+
 
         _pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendJSONDataToServer task = new sendJSONDataToServer();
-                try {
-                     task.execute().get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+
+                 String mon = _month.getText().toString().trim();
+                 String year = _year.getText().toString().trim();
+                 CardNumber = _cardNumber.getText().toString().trim();
+                 ExpiratonDate = mon + year;
+                 CVV = _cardCode.getText().toString().trim();
+
+
+
+                if(CardNumber.isEmpty() || mon.isEmpty() ||  year.isEmpty() || CVV.isEmpty()) {
+                    if(CardNumber.isEmpty())
+                        _cardNumber.setError("Card Number cannot be empty");
+                     if(mon.isEmpty())
+                        _month.setError("Expiration month cannot be empty");
+                     if(year.isEmpty())
+                        _year.setError("Expiration year cannot be empty");
+                     if(CVV.isEmpty())
+                        _cardCode.setError("Card code cannot be empty");
                 }
-
-                Log.i("return statement",status);
-
-                if(status.contains("Successful.")) {
-                    Log.i("Transaction successful", status);
-                    emptyCheckoutData();
+                else
+                {
                     new AlertDialog.Builder(BillingPage.this)
-                            .setTitle("Transaction Details")
-                            .setMessage(status)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            .setTitle("Transaction Confirmation Page")
+                            .setMessage("Are you sure you want to confirm ?")
+                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    onPressGotoHomePage();
+                                    sendJSONDataToServer task = new sendJSONDataToServer();
+                                    try {
+                                        task.execute().get();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    } catch (ExecutionException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    if (status.contains("Successful.")) {
+
+                                        Toast.makeText(getApplicationContext(), "Transaction Successful", Toast.LENGTH_SHORT).show();
+                                        emptyCheckoutData();
+                                        onPressGotoHomePage();
+                                    }  if (status.contains("cardNumber") || status.contains("credit card number is invalid")) {
+                                        _cardNumber.setError("Invalid Card Number");
+
+                                    } if(status.contains("Expiration")) {
+                                        _month.setError("Invalid expiration date");
+                                        _year.setError("Invalid Expiration Date");
+                                    }
+
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
 
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_info)
                             .show();
-                }
-                else
-                {
-                    Log.i("Transaction failed","Ayyooo");
-                    new AlertDialog.Builder(BillingPage.this)
-                            .setTitle("Transaction Details")
-                            .setMessage(status)
-                            .setPositiveButton(R.string.try_Again, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
 
 
-                                }
-                            })
-                            .setNegativeButton(R.string.homePage, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    onPressGotoHomePage();
-
-
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
 
                 }
 
@@ -238,27 +295,7 @@ public class BillingPage extends AppCompatActivity  {
             }
 
             Log.i("returnCode",returnCode);
-           /* if(returnCode.matches("I00001")) {
-                Log.i("Parse Server","store in bitnami");
 
-                ParseObject obj = new ParseObject("TransactionDetails");
-                obj.put("transId", jsonObj.getJSONObject("transactionResponse").getString("transId"));
-                obj.put("accountNumber", jsonObj.getJSONObject("transactionResponse").getString("accountNumber"));
-                obj.put("accountType", jsonObj.getJSONObject("transactionResponse").getString("accountType"));
-                obj.put("refId", jsonObj.getString("refId"));
-                obj.put("status", status);
-
-                obj.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            Log.i("Parse Result", "Successful");
-                        } else {
-                            Log.i("Parse Result", "Failed");
-                        }
-                    }
-                });
-            }*/
             if(jsonObj.getJSONObject("transactionResponse").has("messages")) {
                 Log.i("Inside","transactionResponse");
                     Log.i("Inside","messages");
@@ -282,9 +319,7 @@ public class BillingPage extends AppCompatActivity  {
 
     public JSONObject storeDataInJson()
     {
-        String CardNumber = _cardNumber.getText().toString().trim();
-        String ExpiratonDate = _month.getText().toString().trim() + _year.getText().toString().trim();
-        String CVV = _cardCode.getText().toString().trim();
+
         String amount = String.valueOf(checkoutAmount);
 
 

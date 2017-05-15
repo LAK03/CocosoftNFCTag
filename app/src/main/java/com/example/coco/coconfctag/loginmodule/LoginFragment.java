@@ -35,12 +35,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private ImageView mSettingsImg;
     private SharedPreferences.Editor editor;
 
+    public static int getValue() {
+        return value;
+    }
+
+    public static void setValue(int value) {
+        LoginFragment.value = value;
+    }
+
+    private static int value =0;
 
 
     private TextView mCountTxtView;
     private TextView mTitleTxtView;
     private ImageView mCartImg;
     private RelativeLayout mSearchLayout;
+
 
 
     @Override
@@ -80,6 +90,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         mCartImg.setVisibility(View.GONE);
         mSearchLayout = (RelativeLayout) getActivity().findViewById(R.id.search_layout);
         mSearchLayout.setVisibility(View.GONE);
+
+
     }
 
     @Override
@@ -116,7 +128,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getContext(), "Successfully Logged In", Toast.LENGTH_SHORT).show();
          /*   Intent i = new Intent(getContext(), MainActivity.class);
             startActivity(i);*/
-        getActivity().getSupportFragmentManager().popBackStack();
+            mSearchLayout.setVisibility(View.VISIBLE);
+
+            while(value > 0)
+            {
+                getActivity().getSupportFragmentManager().popBackStack();
+                value --;
+            }
         }
     }
 

@@ -45,6 +45,84 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="15dp"
+        android:text="Item Details"
+        android:textColor="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        android:background="@drawable/ic_edittxt"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="8dp"
+        android:weightSum="1">
+
+
+        <TextView
+            android:id="@+id/txtView"
+            android:layout_width="146dp"
+            android:layout_height="match_parent"
+
+            android:layout_weight="0.20"
+            android:textColor="@color/cast_intro_overlay_button_background_color" />
+
+        <TextView
+            android:id="@+id/txtViewQt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.38"
+
+            android:textColor="@color/cast_intro_overlay_button_background_color" />
+
+        <TextView
+            android:id="@+id/txtViewAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.38"
+
+            android:textColor="@color/cast_intro_overlay_button_background_color" />
+
+
+    </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/tranAmount"
+        android:layout_width="293dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="16sp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="627dp"
+        android:orientation="vertical"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_edit_txt_bg">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -123,12 +201,11 @@
             android:layout_height="48dp"
             android:layout_below="@+id/cardNo"
             android:layout_marginTop="5dp"
-            android:layout_weight="0.64"
             android:background="@drawable/ic_edittxt"
             android:ems="10"
             android:inputType="number"
             android:textColor="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
 
 
     </LinearLayout>
@@ -208,27 +285,19 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tranAmount"
-        android:layout_width="202dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Amount to be paid :: $0:00"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="16sp" />
+
 
     <Button
         android:id="@+id/pay"
         android:layout_width="204dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_weight="0.11"
         android:background="@android:color/holo_orange_light"
         android:text="Proceed to Pay"
         android:textColor="@color/white"
         android:textSize="18sp"
         tools:textAllCaps="false" />
 
-
+    </LinearLayout>
 </LinearLayout>
